@@ -1,5 +1,7 @@
+import TodoErDB from "@/db/client";
 import { ITodEr } from "@/types";
 import { useForm } from "react-hook-form";
+import { useAuth, useIsAuthenticated } from "@polybase/react";
 
 const Form = ({ update, data }: { update: boolean; data?: ITodEr }) => {
   const {
@@ -8,9 +10,39 @@ const Form = ({ update, data }: { update: boolean; data?: ITodEr }) => {
     reset,
     formState: { errors },
   } = useForm<{ title: string; description?: string }>();
+  const { auth, state } = useAuth();
 
-  const onSubmit = async (data: { title: string; description?: string }) => {
-    update ? console.log("update") : console.log("create");
+  const genId = (salt: string) => {
+    const gen = performance.now();
+    const random = gen + Math.random().toString().slice(5) + salt;
+    return random;
+  };
+
+  const db = () => {
+    TodoErDB.signer(async (data) => {
+      return {
+        h: "eth-personal-sign",
+        sig: await auth.ethPersonalSign(data),
+      };
+    });
+    return TodoErDB;
+  };
+
+  const onSubmit = async (dataInnner: { title: string; description?: string }) => {
+    console.log(data, dataInnner);
+    await auth.signIn();
+    if (update) {
+      data &&
+        (await db()
+          .collection("TodoEr")
+          .record(data.id)
+          .call("update", [dataInnner.title, dataInnner.description || ""]));
+    } else {
+      state?.userId &&
+        (await db()
+          .collection("TodoEr")
+          .create([genId("td"), state.userId, dataInnner.title, dataInnner?.description || ""]));
+    }
     reset();
   };
 

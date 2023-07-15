@@ -1,4 +1,6 @@
-const Login = ({ valid }: { valid: "yes" | "no" | null }) => {
+import { PropsWithChildren } from "react";
+
+const Login = ({ valid, children }: PropsWithChildren<{ valid: "yes" | "no" | null }>) => {
   return (
     <div className="card w-96 bg-primary text-primary-content">
       <div className="card-body">
@@ -15,7 +17,7 @@ const Login = ({ valid }: { valid: "yes" | "no" | null }) => {
         ) : (
           <p className="uppercase font-medium text-sm my-3 text-gray-400">sign in with your wallet</p>
         )}
-        <div className="card-actions justify-end">{/* <button className="btn">Buy Now</button> */}</div>
+        <div className="card-actions justify-end">{children}</div>
       </div>
     </div>
   );

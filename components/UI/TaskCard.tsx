@@ -1,24 +1,35 @@
 import { ITodEr } from "@/types";
 import Modal from "./Modal";
 import Form from "./Form";
+import { useAuth, useIsAuthenticated } from "@polybase/react";
+import TodoErDB from "@/db/client";
 
 const TaskCard = ({ data }: { data: ITodEr }) => {
+  const { auth, state } = useAuth();
+
+  const db = () => {
+    TodoErDB.signer(async (data) => {
+      return {
+        h: "eth-personal-sign",
+        sig: await auth.ethPersonalSign(data),
+      };
+    });
+    return TodoErDB;
+  };
+
   const deleteTask = async (docid: string) => {
-    console.log(docid);
+    await auth.signIn();
+    await db().collection("TodoEr").record(docid).call("del");
   };
 
-  const updateTask = (docid: string) => {
-    console.log(docid);
+  const completeTask = async (docid: string) => {
+    await auth.signIn();
+    await db().collection("TodoEr").record(docid).call("complete");
   };
-
-  const completeTask = (docid: string) => {};
 
   return (
     <div className="card mb-8 max-w-[350px] break-inside-avoid shadow-xl dark:bg-neutral">
       <div className="card-body">
-        <div className="inline-flex justify-between">
-          <h3 className="text-md font-thin">{data.id}</h3>
-        </div>
         <h2 className="card-title">{data.title}</h2>
 
         <p>{data.description}</p>
@@ -35,7 +46,7 @@ const TaskCard = ({ data }: { data: ITodEr }) => {
               <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
             </svg>
           </label>
-          <button className="btn btn-sm" onClick={() => void deleteTask(data.id)}>
+          <button className="btn btn-sm" onClick={async () => await deleteTask(data.id)}>
             <svg
               fill="currentColor"
               className="h-5 w-5 dark:text-white "
@@ -50,7 +61,7 @@ const TaskCard = ({ data }: { data: ITodEr }) => {
               />
             </svg>
           </button>
-          <button className="btn btn-sm" onClick={() => void completeTask(data.id)}>
+          <button className="btn btn-sm" onClick={async () => await completeTask(data.id)}>
             <svg
               fill="currentColor"
               className={`h-5 w-5  ${data.complete ? "text-green-500" : "dark:text-white"}`}

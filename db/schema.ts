@@ -2,14 +2,16 @@ export const schema = `
 @public
 collection TodoEr {
   id: string;
+  address: string;
   title: string;
   description?: string;
   complete: boolean;
   owner: PublicKey;
 
-  constructor (id: string, name: string, description?: string) {
+  constructor (id: string, address: string, title: string, description?: string) {
     this.id = id;
     this.title = title;
+    this.address = address;
     this.description = description;
     this.complete = false;
     this.owner = ctx.publicKey;

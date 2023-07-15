@@ -1,6 +1,9 @@
+"use client";
 import Avatar from "../UI/Avatar";
+import { useAuth } from "@polybase/react";
 
 const NavBar = () => {
+  const { state } = useAuth();
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -45,7 +48,7 @@ const NavBar = () => {
       </div>
       <div className="navbar-end">
         <div>
-          <Avatar address="0xB8AF7Fa3DBF5D0c557b6b6dC874c3CC85B0E8d95" />
+          <Avatar address={state?.userId || ""} />
         </div>
       </div>
     </div>

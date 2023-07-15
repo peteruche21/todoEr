@@ -1,0 +1,39 @@
+export const schema = `
+@public
+collection TodoEr {
+  id: string;
+  title: string;
+  description?: string;
+  complete: boolean;
+  owner: PublicKey;
+
+  constructor (id: string, name: string, description?: string) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.complete = false;
+    this.owner = ctx.publicKey;
+  }
+
+  del(){
+    if (this.owner != ctx.publicKey) {
+        throw error('invalid public key');
+    }
+    selfdestruct();
+  }
+
+  update(title: string, description?: string) {
+    if (this.owner != ctx.publicKey) {
+        throw error('invalid public key');
+    }
+    this.title = title;
+    this.description = description;
+  }
+
+  complete() {
+    if (this.owner != ctx.publicKey) {
+        throw error('invalid public key');
+    }
+    this.complete = !this.complete;
+    }
+}`;

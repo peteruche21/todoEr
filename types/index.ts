@@ -5,5 +5,5 @@ export interface ITodEr {
   title: string;
   description?: string;
   complete: boolean;
-  owner: PublicKey;
+  owner?: PublicKey;
 }

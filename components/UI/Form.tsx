@@ -1,6 +1,7 @@
+import { ITodEr } from "@/types";
 import { useForm } from "react-hook-form";
 
-const Form = ({ update }: { update: boolean }) => {
+const Form = ({ update, data }: { update: boolean; data?: ITodEr }) => {
   const {
     register,
     handleSubmit,
@@ -9,9 +10,10 @@ const Form = ({ update }: { update: boolean }) => {
   } = useForm<{ title: string; description?: string }>();
 
   const onSubmit = async (data: { title: string; description?: string }) => {
-    console.log(data);
+    update ? console.log("update") : console.log("create");
     reset();
   };
+
   return (
     <div className="flex">
       <div className="gap-5 mx-auto text-neutral-600">
@@ -25,22 +27,21 @@ const Form = ({ update }: { update: boolean }) => {
               id="title"
               placeholder="enter a title"
               className={`input input-bordered w-full ${errors.title && "border-red-500"}`}
-              {...register("title", { required: true })}
+              {...register("title", { required: true, value: data?.title })}
             />
             {errors.title && (
               <label className="label">
                 <span className="label-text-alt text-red-500 text-xs">please provide a title</span>
               </label>
             )}
-            <input
-              type="text"
+            <textarea
               id="description"
               placeholder="description"
-              className={`input input-bordered w-full ${errors.description && "border-red-500"}`}
-              {...register("description", { required: false })}
+              className={`textarea textarea-bordered w-full ${errors.description && "border-red-500"}`}
+              {...register("description", { required: false, value: data?.description })}
             />
             <div className="mx-auto">
-              <button type={"submit"} className="btn btn-wide">
+              <button type="submit" className="btn btn-wide">
                 submit
               </button>
             </div>

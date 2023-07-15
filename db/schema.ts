@@ -24,7 +24,7 @@ collection TodoEr {
     selfdestruct();
   }
 
-  update(title: string, description?: string) {
+  updateTask(title: string, description?: string) {
     if (this.owner != ctx.publicKey) {
         throw error('invalid public key');
     }
@@ -32,7 +32,7 @@ collection TodoEr {
     this.description = description;
   }
 
-  complete() {
+  completeTask() {
     if (this.owner != ctx.publicKey) {
         throw error('invalid public key');
     }

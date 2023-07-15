@@ -24,7 +24,7 @@ const TaskCard = ({ data }: { data: ITodEr }) => {
 
   const completeTask = async (docid: string) => {
     await auth.signIn();
-    await db().collection("TodoEr").record(docid).call("complete");
+    await db().collection("TodoEr").record(docid).call("completeTask");
   };
 
   return (

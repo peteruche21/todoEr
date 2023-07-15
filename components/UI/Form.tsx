@@ -36,7 +36,7 @@ const Form = ({ update, data }: { update: boolean; data?: ITodEr }) => {
         (await db()
           .collection("TodoEr")
           .record(data.id)
-          .call("update", [dataInnner.title, dataInnner.description || ""]));
+          .call("updateTask", [dataInnner.title, dataInnner.description || ""]));
     } else {
       state?.userId &&
         (await db()

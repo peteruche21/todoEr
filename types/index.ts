@@ -8,3 +8,8 @@ export interface ITodEr {
   complete: boolean;
   owner?: PublicKey;
 }
+
+export interface ITodoView {
+  view: "all" | "completed" | "un-completed";
+  setView: (view: "all" | "completed" | "un-completed") => void;
+}

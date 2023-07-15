@@ -11,18 +11,25 @@ import LoginButton from "@/components/UI/LoginButton";
 import { usePolybase, useCollection } from "@polybase/react";
 import { ITodEr } from "@/types";
 import Spinner from "@/components/UI/Loading";
+import { useStore, useTodoViewStore } from "@/store";
 
 const Main = () => {
   const polybase = usePolybase();
   const { data, error, loading } = useCollection<ITodEr>(polybase.collection("TodoEr"));
   const [valid, setValid] = useState<"yes" | "no" | null>("yes");
-  const [view, setView] = useState<"all" | "completed" | "un-completed">("all");
+  const view = useStore(useTodoViewStore, (state) => state.view);
   const [authState, setAuthState] = useState<AuthState>();
 
   const getTodos = (): JSX.Element[] | undefined => {
-    return data?.data.map((todo) => {
-      return <TaskCard key={todo.data.id} data={todo.data} />;
-    });
+    const todoArr = data?.data.map((todo) => todo.data);
+    switch (view) {
+      case "completed":
+        return todoArr?.filter((todo) => todo.complete).map((todo) => <TaskCard key={todo.id} data={todo} />);
+      case "un-completed":
+        return todoArr?.filter((todo) => !todo.complete).map((todo) => <TaskCard key={todo.id} data={todo} />);
+      default:
+        return todoArr?.map((todo) => <TaskCard key={todo.id} data={todo} />);
+    }
   };
 
   return (

@@ -1,9 +1,12 @@
 "use client";
 import Avatar from "../UI/Avatar";
 import { useAuth } from "@polybase/react";
+import { useStore, useTodoViewStore } from "@/store";
 
 const NavBar = () => {
   const { state } = useAuth();
+  const view = useStore(useTodoViewStore, (state) => state);
+
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -21,13 +24,13 @@ const NavBar = () => {
           </label>
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li>
-              <a>all</a>
+              <button onClick={() => view?.setView("all")}>all</button>
             </li>
             <li>
-              <a>completed</a>
+              <button onClick={() => view?.setView("completed")}>completed</button>
             </li>
             <li>
-              <a>un-completed</a>
+              <button onClick={() => view?.setView("all")}>un-completed</button>
             </li>
           </ul>
         </div>
@@ -36,13 +39,13 @@ const NavBar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a>all</a>
+            <button onClick={() => view?.setView("all")}>all</button>
           </li>
           <li>
-            <a>completed</a>
+            <button onClick={() => view?.setView("completed")}>completed</button>
           </li>
           <li>
-            <a>un-completed</a>
+            <button onClick={() => view?.setView("all")}>un-completed</button>
           </li>
         </ul>
       </div>

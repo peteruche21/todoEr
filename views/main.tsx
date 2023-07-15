@@ -12,13 +12,24 @@ import { usePolybase, useCollection } from "@polybase/react";
 import { ITodEr } from "@/types";
 import Spinner from "@/components/UI/Loading";
 import { useStore, useTodoViewStore } from "@/store";
+import { isHolderOfCollection } from "../utils/nftApi";
 
 const Main = () => {
   const polybase = usePolybase();
   const { data, error, loading } = useCollection<ITodEr>(polybase.collection("TodoEr"));
-  const [valid, setValid] = useState<"yes" | "no" | null>("yes");
+  const [valid, setValid] = useState<"yes" | "no" | null>(null);
   const view = useStore(useTodoViewStore, (state) => state.view);
   const [authState, setAuthState] = useState<AuthState>();
+
+  useEffect(() => {
+    holder();
+  }, [authState?.userId]);
+
+  const holder = async () => {
+    if (!authState?.userId) return;
+    const isHolder = await isHolderOfCollection(authState?.userId);
+    setValid(isHolder ? "yes" : "no");
+  };
 
   const getTodos = (): JSX.Element[] | undefined => {
     const todoArr = data?.data.map((todo) => todo.data);
@@ -45,6 +56,7 @@ const Main = () => {
           <div className="mx-auto">
             <h2 className="uppercase font-medium text-sm my-3 text-gray-400 text-center"></h2>
             {loading && <Spinner />}
+            {data?.data.length == 0 && !loading && <div>No tasks</div>}
             {data && <div className="columns-1 gap-5 lg:columns-2">{getTodos()}</div>}
           </div>
         </div>

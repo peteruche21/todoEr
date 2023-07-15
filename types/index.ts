@@ -1,6 +1,6 @@
 import { PublicKey } from "@polybase/client";
 
-interface ITodEr {
+export interface ITodEr {
   id: string;
   title: string;
   description?: string;

@@ -1,3 +1,4 @@
+"use client";
 import { formatAddress } from "@/utils/addresses";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import { useEffect, useState } from "react";
 const Avatar = ({ address }: { address: string }) => {
   const [avatar, setAvatar] = useState<string>("");
   const getAvatar = async () => {
-    setAvatar((await formatAddress(address, true)).avatar);
+    setAvatar((await formatAddress(address, false)).avatar);
   };
 
   useEffect(() => {

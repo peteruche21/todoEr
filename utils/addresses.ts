@@ -9,8 +9,13 @@ export const formatAddress = cache(async (address: string, getName?: boolean) =>
       name: "",
       avatar: "",
     };
-  const provider = new JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
-  const name = getName && (await provider?.lookupAddress(address));
+  const provider = new JsonRpcProvider(process.env.ALCHEMY_RPC_URL);
+  let name;
+  try {
+    name = getName && (await provider?.lookupAddress(address));
+  } catch (error) {
+    console.log(error);
+  }
   return {
     address,
     shortString: `${address.slice(0, 6)}...${address.slice(-4)}`,

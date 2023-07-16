@@ -22,9 +22,8 @@ const TaskCard = ({ data }: { data: ITodEr }) => {
 
   const decryptAndStore = async () => {
     if (!data) return;
-    const title = await decrypt(data.title);
     const description = await decrypt(data.description || "");
-    setDataInner({ ...data, title, description });
+    setDataInner({ ...data, description });
   };
 
   useEffect(() => {

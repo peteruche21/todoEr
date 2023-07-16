@@ -11,7 +11,7 @@ import { AuthState } from "@polybase/auth";
 
 const Mint = () => {
   const [holder, setHolder] = useState(false);
-  const provider = new ethers.BrowserProvider((window as any).ethereum);
+  const provider = typeof window !== "undefined" ? new ethers.BrowserProvider((window as any).ethereum) : null;
   const contract = new ethers.Contract(TOKEN_CONTRACT_ADDRESS, abi, provider);
   const [loading, setLoading] = useState(false);
   const [authState, setAuthState] = useState<AuthState | null>(null);

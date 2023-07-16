@@ -31,7 +31,6 @@ const Form = ({ update, data }: { update: boolean; data?: ITodEr }) => {
 
   const onSubmit = async (dataInnner: { title: string; description?: string }) => {
     console.log(data, dataInnner);
-    dataInnner.title = await encrypt(dataInnner.title);
     dataInnner.description = await encrypt(dataInnner.description || "");
     await auth.signIn();
     if (update) {

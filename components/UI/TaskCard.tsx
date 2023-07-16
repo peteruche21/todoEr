@@ -3,9 +3,12 @@ import Modal from "./Modal";
 import Form from "./Form";
 import { useAuth, useIsAuthenticated } from "@polybase/react";
 import TodoErDB from "@/db/client";
+import { useEffect, useState } from "react";
+import { decrypt } from "@/db/utils";
 
 const TaskCard = ({ data }: { data: ITodEr }) => {
   const { auth, state } = useAuth();
+  const [dataInner, setDataInner] = useState<ITodEr>();
 
   const db = () => {
     TodoErDB.signer(async (data) => {
@@ -16,6 +19,17 @@ const TaskCard = ({ data }: { data: ITodEr }) => {
     });
     return TodoErDB;
   };
+
+  const decryptAndStore = async () => {
+    if (!data) return;
+    const title = await decrypt(data.title);
+    const description = await decrypt(data.description || "");
+    setDataInner({ ...data, title, description });
+  };
+
+  useEffect(() => {
+    decryptAndStore();
+  }, [data]);
 
   const deleteTask = async (docid: string) => {
     await auth.signIn();
@@ -30,9 +44,9 @@ const TaskCard = ({ data }: { data: ITodEr }) => {
   return (
     <div className="card mb-8 max-w-[350px] break-inside-avoid shadow-xl dark:bg-neutral">
       <div className="card-body">
-        <h2 className="card-title">{data.title}</h2>
+        <h2 className="card-title">{dataInner?.title}</h2>
 
-        <p>{data.description}</p>
+        <p>{dataInner?.description}</p>
         <div className="card-actions btn-group absolute -bottom-3 left-5 justify-start gap-0">
           <label className="btn btn-sm" htmlFor={data.id}>
             <svg
@@ -79,7 +93,7 @@ const TaskCard = ({ data }: { data: ITodEr }) => {
         </div>
       </div>
       <Modal modalId={data.id}>
-        <Form update={true} data={data} />
+        <Form update={true} data={dataInner} />
       </Modal>
     </div>
   );

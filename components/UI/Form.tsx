@@ -2,6 +2,7 @@ import TodoErDB from "@/db/client";
 import { ITodEr } from "@/types";
 import { useForm } from "react-hook-form";
 import { useAuth, useIsAuthenticated } from "@polybase/react";
+import { encrypt } from "@/db/utils";
 
 const Form = ({ update, data }: { update: boolean; data?: ITodEr }) => {
   const {
@@ -30,6 +31,8 @@ const Form = ({ update, data }: { update: boolean; data?: ITodEr }) => {
 
   const onSubmit = async (dataInnner: { title: string; description?: string }) => {
     console.log(data, dataInnner);
+    dataInnner.title = await encrypt(dataInnner.title);
+    dataInnner.description = await encrypt(dataInnner.description || "");
     await auth.signIn();
     if (update) {
       data &&

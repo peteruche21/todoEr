@@ -38,4 +38,6 @@ collection TodoEr {
     }
     this.complete = !this.complete;
     }
+    
+  @index(address);
 }`;

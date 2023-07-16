@@ -16,10 +16,12 @@ import { isHolderOfCollection } from "../utils/nftApi";
 
 const Main = () => {
   const polybase = usePolybase();
-  const { data, error, loading } = useCollection<ITodEr>(polybase.collection("TodoEr"));
+  const [authState, setAuthState] = useState<AuthState>();
+  const { data, error, loading } = useCollection<ITodEr>(
+    polybase.collection("TodoEr").where("address", "==", authState?.userId || "")
+  );
   const [valid, setValid] = useState<"yes" | "no" | null>(null);
   const view = useStore(useTodoViewStore, (state) => state.view);
-  const [authState, setAuthState] = useState<AuthState>();
 
   useEffect(() => {
     holder();
